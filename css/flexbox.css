@@ -1,50 +1,29 @@
 * {
     margin: 0;
     padding: 0;
-}   
-
-.main {
-    width:100%;
-}
-
-header {
-    height:50px; 
-    width:100%;
-    background-color: aqua;
-}
-
-nav {
-    display: flex
-    padding top 12px;
-
-}
-
-nav ul {
+  }
+  
+  nav {
     display: flex;
-    width:200px;
+    padding-top: 12px;
+  }
+  
+  nav ul {
+    width: 200px;
+    margin: 0 auto;
+    display: flex;
     justify-content: center;
-    margin:0 auto;
-}
-
-li {
-    padding: 0 10px;
-    width:50px;
-}
-
-ul, li {
-    list-style: none;
-}
-
-.content {
-    min-height:100%;
-    width:100%;
+  }
+  
+  .content {
+    min-height: 100%;
+    width: 100%;
     display: flex;
     justify-content: center;
     margin-top: 50px;
-}
-
-.center {
-
+  }
+  
+  .center {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -53,29 +32,30 @@ ul, li {
     padding: 25px;
     border-radius: 20px;
     border: 1px solid #d3d3d3;
-}
-
-.center form {
+  }
+  
+  .center form {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
   }
-
-label {
+  
+  label {
     padding-bottom: 20px;
     width: 80%;
   }
-
-label > span {
+  
+  label > span {
     display: none;
   }
-
-input {
+  
+  input[type='text'],
+  input[type='password'] {
     height: 20px;
     width: 100%;
   }
-
+  
   button {
     padding: 10px;
     border-radius: 10px;
@@ -85,15 +65,3 @@ input {
     color: white;
     margin-bottom: 10px;
   }
-
-.login{
-    display: flex;
-    flex-direction: column;
-}
-
-footer {
-    height:100px;
-    width:100%;
-    position: absolute;
-    bottom: 0;
-}

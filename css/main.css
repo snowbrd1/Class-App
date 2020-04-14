@@ -1,0 +1,16 @@
+.employee-item-block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .employee-checkbox {
+    width: 25px;
+    display: flex;
+  }
+  
+  .employee-name,
+  .employee-status {
+    width: 200px;
+  }
