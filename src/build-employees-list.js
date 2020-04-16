@@ -20,8 +20,8 @@
     const employees = await getEmployees();
     console.log(employees);
   
-    if (employee.length) {
-      const div = document.getElementById('employee');
+    if (employees.length) {
+      const div = document.getElementById('employees');
       const loadingDiv = div.childNodes[1];
   
       const ul = document.createElement('ul');
@@ -30,18 +30,18 @@
       div.replaceChild(ul, loadingDiv); // <- order is important here!
   
       // create the list
-      employees.map((employees) => {
+      employees.map((employee) => {
         // building blocks
         const li = document.createElement('li');
-        li.className = 'employees-item';
+        li.className = 'employee-item';
         const block = document.createElement('div');
-        block.className = 'employees-item-block';
+        block.className = 'employee-item-block';
   
         //   content
         const checkboxSpan = document.createElement('span');
         const checkbox = document.createElement('input');
         checkbox.setAttribute('type', 'checkbox');
-        checkboxSpan.className = 'employees-checkbox';
+        checkboxSpan.className = 'employee-checkbox';
         checkboxSpan.appendChild(checkbox);
   
         const nameSpan = document.createElement('span');
