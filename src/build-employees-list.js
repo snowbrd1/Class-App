@@ -1,69 +1,130 @@
 /**
- * html structure
+ * @class EmployeeList
  *
- * @example
- * <ul class="employees-list">
- *  <li class="employees-item">
- *    <div class="employees-item-block">
- *      <span class="employees-checkbox"><input type="checkbox"></span>
- *      <span class="employee-name">Employee name</span>
- *      <span class="employee-position">pending</span>
- *      <span class="employee-supervisor">date create</span>
- *    </div>
- *  </li>
- * </ul>
+ * Creates a list of employees and updates a list
  */
 
-// This is an IIFE (Immediately Invoked Function Expression).
-// What it does is in the name.
-(async () => {
-    const employees = await getEmployees();
-    console.log(employees);
-  
-    if (employees.length) {
-      const div = document.getElementById('employees');
-      const loadingDiv = div.childNodes[1];
-  
-      const ul = document.createElement('ul');
-  
-      // replace 'loading...' with list
-      div.replaceChild(ul, loadingDiv); // <- order is important here!
-  
-      // create the list
-      employees.map((employee) => {
-        // building blocks
-        const li = document.createElement('li');
-        li.className = 'employee-item';
-        const block = document.createElement('div');
-        block.className = 'employee-item-block';
-  
-        //   content
-        const checkboxSpan = document.createElement('span');
-        const checkbox = document.createElement('input');
-        checkbox.setAttribute('type', 'checkbox');
-        checkboxSpan.className = 'employee-checkbox';
-        checkboxSpan.appendChild(checkbox);
-  
-        const nameSpan = document.createElement('span');
-        nameSpan.className = 'employee-name';
-        nameSpan.innerText = employee.name;
-  
-        const positionSpan = document.createElement('span');
-        positionSpan.className = 'employee-position';
-        positionSpan.innerText = employee.position;
-  
-        const supervisorSpan = document.createElement('span');
-        supervisorSpan.className = 'employee-supervisor';
-        supervisorSpan.innerText = employee.supervisor;
-  
-        // add list item
-        block.appendChild(checkboxSpan);
-        block.appendChild(nameSpan);
-        block.appendChild(positionSpan);
-        block.appendChild(supervisorSpan);
-  
-        li.appendChild(block);
-        ul.appendChild(li);
-      });
+class EmployeeList {
+  employees = [];
+
+  constructor() {}
+
+  /**
+   * Build employee list parent.
+   * Uses bootstrap classes with some custom overrides.
+   */
+  createEmployeeListParent = () => {
+    const ul = document.createElement('ul');
+    ul.id = 'employees-list';
+    ul.className = 'list-group list-group-flush checked-list-box';
+    return ul;
+  };
+
+  _deleteEventHandler = (employeeId) => async () => {
+    if (employeeId) {
+      const res = await deleteEmployee(employeeId);
+
+      if (res !== null) {
+        this.employees = this.employees.filter((employee) => employee.employee_id !== employeeId);
+        const employee = document.getElementById(`employee-${employeeId}`);
+        employee.remove();
+
+        if (!this.employees.length) {
+          const div = document.getElementById('employees');
+          const loadingDiv = div.childNodes[1];
+          const errDiv = this.generateErrorMsg('Create new employees!');
+          div.replaceChild(errDiv, loadingDiv);
+        }
+      }
     }
-  })();
+  };
+
+  /**
+   * Builds the list item.
+   * Uses bootstrap classes with some custom overrides.
+   *
+   * {@link https://getbootstrap.com/docs/4.4/components/list-group/}
+   * @example
+   * <li class="list-group-item">
+   *   <button class="btn btn-secondary" onclick="deleteEmployee(e, index)">X</button>
+   *   <span>Employee name</span>
+   *   <span>Position</span>
+   *   <span>Supervisor</span>
+   * </li>
+   */
+  buildEmployeeListRowItem = (employee) => {
+    const listGroupItem = document.createElement('li');
+    listGroupItem.id = `employee-${employee.employee_id}`; // employee-1
+    listGroupItem.className = 'list-group-item';
+
+    const deleteBtn = document.createElement('button');
+    const deleteBtnTxt = document.createTextNode('X');
+    deleteBtn.className = 'btn btn-secondary';
+    deleteBtn.addEventListener('click', this._deleteEventHandler(employee.employee_id));
+    deleteBtn.appendChild(deleteBtnTxt);
+  
+    const employeeNameSpan = document.createElement('span');
+    const employeeName = document.createTextNode(employee.employee_name);
+    employeeNameSpan.appendChild(employeeName);
+  
+    const employeePositionSpan = document.createElement('span');
+    const employeePosition = document.createTextNode(employee.position);
+    employeePositionSpan.appendChild(employeePosition);
+  
+    const employeeSupervisorSpan = document.createElement('span');
+    const employeeSupervisor = document.createTextNode(employee.supervisor);
+    employeeSupervisorSpan.appendChild(employeeSupervisor);
+  
+    // add list item's details
+    listGroupItem.append(deleteBtn);
+    listGroupItem.append(employeeNameSpan);
+    listGroupItem.append(employeePositionSpan);
+    listGroupItem.append(employeeSupervisorSpan);
+
+    return listGroupItem;
+  };
+
+  /**
+   * Assembles the list items then mounts them to a parent node.
+   * Uses bootstrap classes with some custom overrides.
+   */
+  buildEmployeesList = (mount, employees) =>
+    employees.map((employee) => {
+      const listGroupRowItem = this.buildEmployeeListRowItem(employee);
+
+      // add entire list item
+      mount.append(listGroupRowItem);
+    });
+
+  generateErrorMsg = (msg) => {
+    const div = document.createElement('div');
+    const text = document.createTextNode(msg);
+    div.id = 'user-message';
+    div.className = 'center';
+    div.appendChild(text);
+    return div;
+  };
+
+  generateEmployees = async () => {
+    const res = await getEmployees();
+    const div = document.getElementById('employees');
+    const loadingDiv = div.childNodes[1];
+
+    if (res.length) {
+      this.employees = res;
+      const employeesDiv = this.createEmployeeListParent();
+      this.buildEmployeesList(employeesDiv, res);
+      div.replaceChild(employeesDiv, loadingDiv);
+    } else {
+      const errDiv = this.generateErrorMsg(res.msg);
+      div.replaceChild(errDiv, loadingDiv);
+    }
+  };
+}
+
+const inst = new EmployeeList();
+
+// This is an IIFE (Immediately Invoked Function Expression).
+(async () => {
+  inst.generateEmployees();
+})();

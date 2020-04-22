@@ -1,9 +1,11 @@
 const doLogin = async (e) => {
   e.preventDefault();
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
+  const username = document.getElementById('formInputUsername').value;
+  const password = document.getElementById('formInputPassword').value;
 
-  const res = await login({ username, password });
+  const res = await login({ username, password }).catch((err) => {
+    alert('Failed to login. Please try again later.');
+  });
 
   const { auth, access_token, refresh_token } = res;
 
@@ -14,19 +16,21 @@ const doLogin = async (e) => {
   window.location.href = 'home.html';
 };
 
-const doRegister = (e) => {
+const doRegister = async (e) => {
   e.preventDefault();
-  const username = document.getElementById('username').value;
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+  const username = document.getElementById('formInputUsernameReg').value;
+  const email = document.getElementById('formInputEmailReg').value;
+  const password = document.getElementById('formInputPasswordReg').value;
 
-  register({
+  const res = await register({
     username,
     email,
     password,
-  }).then((res) => {
-    window.location.href = '/';
   });
+
+  if (res) {
+    window.location.href = '/';
+  }
 };
 
 const doLogout = (e) => {
