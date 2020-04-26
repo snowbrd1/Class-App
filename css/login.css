@@ -3,16 +3,12 @@
     justify-content: space-between;
     width: 500px;
     padding: 20px;
-<<<<<<< HEAD
-  } 
-=======
   }
   
   .card-title,
   .form-group-btn {
     padding-left: 1.25rem;
   }
->>>>>>> 436827b1300836cec8d362cabdfca0f47f890add
   
   .right-border {
     border-right: 1px solid grey;
