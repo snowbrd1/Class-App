@@ -44,6 +44,5 @@ describe('Newhire App', () => {
   });
 
   xit('should update an individual employee', () => {
-    // ..
   });
 });
